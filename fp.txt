@@ -1,0 +1,3 @@
+<peer-fingerprint>
+55:F0:A8:75:70:46:6E:0B:A2:31:53:88:0B:0E:8C:E4:8A:5E:BF:1E:08:16:16:41:63:2C:B5:F4:D2:73:9F:FF
+</peer-fingerprint>
