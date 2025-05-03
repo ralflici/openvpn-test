@@ -21,19 +21,18 @@ ip -n ovpn-client link set veth1 up
 #ip -n ovpn-server tuntap add tun0 mode tun
 #ip -n ovpn-server link add tun0 type ovpn-dco
 
-OVPN=${OVPN:-/home/ordex/exp/openvpn_dev/openvpn/src/openvpn/openvpn}
-#OVPN=${OVPN:-/home/ordex/exp/openvpn-master}
-
-CA=../../test-pki/pki/ca.crt
-DH=../../test-pki/pki/dh.pem
-CERT=../../test-pki/pki/issued/server.crt
-KEY=../../test-pki/pki/private/server.key
+CA=${CA:-${PKI_DIR}/pki/ca.crt}
+DH=${DH:-${PKI_DIR}/pki/dh.pem}
+CERT=${CERT:-${PKI_DIR}/pki/issued/server.crt}
+KEY=${KEY:-${PKI_DIR}/pki/private/server.key}
+PROTO=${PROTO:-udp}
 
 ip netns exec ovpn-server \
 	${GDB} ${VALGRIND} ${OVPN} \
 	--server 10.10.0.0 255.255.255.0 \
 	--dev tun \
+    --proto ${PROTO} \
 	--topology subnet \
 	--ca ${CA} \
 	--cert ${CERT} --key ${KEY} \
-	--verb 3 --dh ${DH} $@
+	--verb 4 --dh ${DH} $@

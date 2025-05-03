@@ -12,18 +12,17 @@ ip -n ovpn-client addr add 10.10.10.2/24 dev veth1
 ip -n ovpn-server link set veth0 up
 ip -n ovpn-client link set veth1 up
 
-#OVPN=/usr/sbin/openvpn
-OVPN=${OVPN:-/home/ordex/exp/openvpn_dev/openvpn/src/openvpn/openvpn}
-
-CA=/home/ordex/exp/test-pki/pki/ca.crt
-DH=/home/ordex/exp/test-pki/pki/dh.pem
-CERT=/home/ordex/exp/test-pki/pki/issued/server.crt
-KEY=/home/ordex/exp/test-pki/pki/private/server.key
+CA=${CA:-${PKI_DIR}/pki/ca.crt}
+DH=${DH:-${PKI_DIR}/pki/dh.pem}
+CERT=${CERT:-${PKI_DIR}/pki/issued/server.crt}
+KEY=${KEY:-${PKI_DIR}/pki/private/server.key}
+PROTO=${PROTO:-udp}
 
 ip netns exec ovpn-server ${OVPN} \
 	--tls-server --ifconfig 10.10.0.1 10.10.0.2 \
 	--dev tun \
+    --proto ${PROTO} \
 	--cipher AES-256-GCM \
 	--ca ${CA} \
 	--cert ${CERT} --key ${KEY} \
-	--verb 3 --dh ${DH} $@
+	--verb 4 --dh ${DH} $@

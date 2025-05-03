@@ -1,6 +1,5 @@
 #!/bin/bash
 
-OVPN=${OVPN:-/home/ordex/exp/openvpn_dev/openvpn/src/openvpn/openvpn}
 CERT=$(pwd)/clientcert.pem
 KEY=$(pwd)/clientkey.pem
 

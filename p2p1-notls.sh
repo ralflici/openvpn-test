@@ -12,10 +12,11 @@ ip -n ovpn-client addr add 10.10.10.2/24 dev veth1
 ip -n ovpn-server link set veth0 up
 ip -n ovpn-client link set veth1 up
 
-OVPN=${OVPN:-/home/ordex/exp/openvpn/src/openvpn/openvpn}
+PROTO=${PROTO:-udp}
 
 ip netns exec ovpn-server ${OVPN} \
 	--secret shared.key \
+    --proto ${PROTO} \
 	--ifconfig 10.10.0.1 10.10.0.2 \
 	--dev tun \
 	--data-ciphers-fallback AES-128-CBC \

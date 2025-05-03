@@ -14,19 +14,19 @@ ip -n ovpn-client addr add 10.10.10.2/24 dev veth1
 ip -n ovpn-server link set veth0 up
 ip -n ovpn-client link set veth1 up
 
-OVPN=${OVPN:-/home/ordex/exp/openvpn/src/openvpn/openvpn}
-CERT=/home/ordex/exp/openvpn-test/servercert.pem
-KEY=/home/ordex/exp/openvpn-test/serverkey.pem
+CERT=servercert.pem
+KEY=serverkey.pem
+PROTO=${PROTO:-udp}
 
-FP=$(openssl x509 -in /home/ordex/exp/openvpn-test/clientcert.pem -noout -fingerprint -sha256 | sed 's/.*=//')
+FP=$(openssl x509 -in $(dirname $0)/clientcert.pem -noout -fingerprint -sha256 | sed 's/.*=//')
 
+(sleep 3 && ip -n ovpn-server addr add 10.10.0.1/24 dev tap0 && ip -n ovpn-server link set dev tap0 up) &
 ip netns exec ovpn-server ${VALGRIND} ${OVPN} \
 	--mode server \
 	--tls-server \
 	--dev tap \
+    --proto ${PROTO} \
 	--cipher AES-256-GCM \
 	--peer-fingerprint ${FP} \
 	--cert ${CERT} --key ${KEY} \
-	--verb 3 --dh none $@
-
-ip -n ovpn-server addr add 10.10.8.1/24 dev tap0
+	--verb 4 --dh none $@
